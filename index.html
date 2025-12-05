@@ -1,244 +1,301 @@
 <!doctype html>
 <html lang="bg">
 <head>
-<meta charset="utf-8" />
-<title>Интерактивна таблица — Top N сум на най-добрите резултати</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<title>КВАЛИФИКАЦИИ ЗА ЛИГА НА ИЗВЪНЗЕМНИТЕ</title>
+
 <style>
-  body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:20px;background:#f7f8fb}
-  textarea{width:100%;height:100px;font-family:monospace}
-  table{border-collapse:collapse;width:100%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-  th,td{border:1px solid #e2e6ef;padding:6px 8px;text-align:right}
-  th{background:#f1f4fb;position:sticky;top:0;z-index:2}
-  th .col-controls{display:flex;gap:6px;align-items:center;justify-content:flex-end}
-  th .col-title{flex:1;text-align:left}
-  tr:nth-child(even) td{background:#fbfcff}
-  .controls{display:flex;gap:12px;align-items:center;margin:8px 0 14px}
-  .small{font-size:0.9rem;color:#444}
-  button{cursor:pointer}
-  .filter-select{min-width:140px}
-  .status{margin-top:8px;color:#333}
+body { background:#001a33; color:yellow; font-family:Arial; margin:10px; }
+h1 { text-align:center; color:#ffeb3b; font-size:20px; margin:8px 0 12px; }
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: auto;
+    table-layout: auto;
+}
+
+/* клетки */
+th, td {
+    padding:4px 6px;
+    border:1px solid #666;
+    white-space:nowrap;
+    font-size:12px;
+}
+
+/* редуване */
+tr:nth-child(even) { background:#00264d; }
+td { color:#ffea80; }
+
+/* Име — ляво */
+thead th:nth-child(3),
+tbody td:nth-child(3) {
+    text-align:left;
+}
+
+/* първа колона — фиксирана */
+thead th:nth-child(1),
+tbody td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background:#003366;
+    width:35px;
+    text-align:center;
+}
+
+/* top20 */
+tbody tr:nth-child(-n+20) td {
+    color:#ffff99 !important;
+    font-weight:bold;
+}
+
+/* стрелки */
+th.sortable {
+    cursor:pointer;
+    position:relative;
+    padding-right:12px;
+}
+
+th.sortable::after {
+    position:absolute;
+    right:2px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:11px;
+    color:#ffff66;
+    pointer-events:none;
+}
+
+th.sort-asc::after { content:"↑"; }
+th.sort-desc::after { content:"↓"; }
 </style>
 </head>
+
 <body>
-  <h2>Интерактивна таблица — сортиране, филтри и Top N суми</h2>
+<h1>КВАЛИФИКАЦИИ ЗА ЛИГА НА ИЗВЪНЗЕМНИТЕ</h1>
 
-  <div class="controls">
-    <label class="small">Постави CSV/TSV (копи от Excel):</label>
-    <button id="load-sample">Зареди пример</button>
-    <label class="small">Top N (по подразбиране 15):</label>
-    <input id="topN" type="number" value="15" min="1" max="20" style="width:60px" />
-    <button id="applyTopN">Пресметни</button>
-    <button id="clearFilters">Изчисти филтрите</button>
-  </div>
-
-  <textarea id="csvInput" placeholder="Постави CSV/TSV тук (или копи-пейст от Excel). Първият ред се счита за заглавия."></textarea>
-  <div style="margin:8px 0">
-    <button id="parseBtn">Зареди таблицата</button>
-  </div>
-
-  <div id="tableWrap"></div>
-
-  <div class="status" id="status"></div>
+<div style="overflow:auto;">
+<table id="ranking">
+<thead>
+<tr>
+<th>място</th>
+<th>ID</th>
+<th>име</th>
+<th>игра 21</th>
+<th>игра 22</th>
+<th>игра 23</th>
+<th>игра 24</th>
+<th>игра 25</th>
+<th>игра 26</th>
+<th>игра 27</th>
+<th>игра 28</th>
+<th>игра 29</th>
+<th>игра 30</th>
+<th>игра 31</th>
+<th>игра 32</th>
+<th>игра 33</th>
+<th>игра 34</th>
+<th>игра 35</th>
+<th>игра 36</th>
+<th>игра 37</th>
+<th>игра 38</th>
+<th>игра 39</th>
+<th>игра 40</th>
+<th>Най-добри 15</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>10802</td><td>Златан Мераков</td><td>100</td><td>95</td><td>95</td><td>77</td><td>90</td><td>83</td><td>82</td><td>85</td><td>50</td><td>80</td><td>82</td><td>78</td><td>90</td><td>90</td><td>76</td><td>75</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1278</td></tr>
+<tr><td>2</td><td>11607</td><td>Пламен Младенов </td><td>84</td><td>0</td><td>90</td><td>84</td><td>100</td><td>90</td><td>61</td><td>0</td><td>95</td><td>95</td><td>0</td><td>100</td><td>76</td><td>100</td><td>100</td><td>100</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1175</td></tr>
+<tr><td>3</td><td>10906</td><td>Иван Петров</td><td>77</td><td>85</td><td>0</td><td>79</td><td>80</td><td>85</td><td>85</td><td>81</td><td>64</td><td>74</td><td>0</td><td>82</td><td>83</td><td>85</td><td>78</td><td>84</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1122</td></tr>
+<tr><td>4</td><td>10803</td><td>Зорка</td><td>82</td><td>78</td><td>52</td><td>95</td><td>76</td><td>100</td><td>64</td><td>95</td><td>0</td><td>83</td><td>80</td><td>0</td><td>84</td><td>82</td><td>61</td><td>77</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1109</td></tr>
+<tr><td>5</td><td>10404</td><td>Георги Радулов</td><td>95</td><td>0</td><td>0</td><td>0</td><td>95</td><td>80</td><td>100</td><td>82</td><td>77</td><td>100</td><td>100</td><td>95</td><td>77</td><td>95</td><td>0</td><td>90</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1086</td></tr>
+<tr><td>6</td><td>10202</td><td>Борис Русев</td><td>0</td><td>100</td><td>0</td><td>0</td><td>83</td><td>74</td><td>81</td><td>100</td><td>71</td><td>78</td><td>79</td><td>77</td><td>79</td><td>74</td><td>85</td><td>95</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1076</td></tr>
+<tr><td>7</td><td>11313</td><td>Митова</td><td>0</td><td>79</td><td>79</td><td>81</td><td>73</td><td>62</td><td>73</td><td>75</td><td>57</td><td>65</td><td>71</td><td>62</td><td>65</td><td>84</td><td>75</td><td>72</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1073</td></tr>
+<tr><td>8</td><td>11309</td><td>Мая Михайлова</td><td>69</td><td>62</td><td>61</td><td>67</td><td>71</td><td>61</td><td>59</td><td>73</td><td>55</td><td>72</td><td>73</td><td>67</td><td>59</td><td>62</td><td>66</td><td>65</td><td>0</td><td>0</td><td>0</td><td>0</td><td>987</td></tr>
+<tr><td>9</td><td>10907</td><td>Иван Цочев</td><td>81</td><td>83</td><td>84</td><td>72</td><td>78</td><td>79</td><td>80</td><td>83</td><td>74</td><td>77</td><td>0</td><td>0</td><td>64</td><td>0</td><td>80</td><td>76</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1011</td></tr>
+<tr><td>10</td><td>10307</td><td>Виолета Георгиева</td><td>64</td><td>55</td><td>62</td><td>69</td><td>58</td><td>68</td><td>52</td><td>55</td><td>51</td><td>68</td><td>68</td><td>81</td><td>55</td><td>69</td><td>55</td><td>62</td><td>0</td><td>0</td><td>0</td><td>0</td><td>941</td></tr>
+<tr><td>11</td><td>10509</td><td>Деян Димитров</td><td>74</td><td>73</td><td>78</td><td>76</td><td>84</td><td>77</td><td>53</td><td>80</td><td>0</td><td>0</td><td>0</td><td>84</td><td>75</td><td>63</td><td>77</td><td>85</td><td>0</td><td>0</td><td>0</td><td>0</td><td>979</td></tr>
+<tr><td>12</td><td>10514</td><td>Димитър Георгиев</td><td>0</td><td>66</td><td>83</td><td>85</td><td>77</td><td>73</td><td>90</td><td>0</td><td>73</td><td>71</td><td>84</td><td>75</td><td>0</td><td>0</td><td>90</td><td>73</td><td>0</td><td>0</td><td>0</td><td>0</td><td>940</td></tr>
+<tr><td>13</td><td>10904</td><td>Иван Пантев</td><td>90</td><td>84</td><td>0</td><td>0</td><td>85</td><td>0</td><td>95</td><td>84</td><td>0</td><td>81</td><td>0</td><td>76</td><td>78</td><td>80</td><td>82</td><td>69</td><td>0</td><td>0</td><td>0</td><td>0</td><td>904</td></tr>
+<tr><td>14</td><td>10510</td><td>Деян Станев</td><td>85</td><td>0</td><td>0</td><td>100</td><td>75</td><td>81</td><td>79</td><td>90</td><td>58</td><td>75</td><td>95</td><td>0</td><td>0</td><td>0</td><td>72</td><td>80</td><td>0</td><td>0</td><td>0</td><td>0</td><td>890</td></tr>
+<tr><td>15</td><td>10104</td><td>Антон Щерев</td><td>79</td><td>76</td><td>75</td><td>80</td><td>0</td><td>57</td><td>78</td><td>61</td><td>0</td><td>73</td><td>78</td><td>73</td><td>74</td><td>79</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>883</td></tr>
+<tr><td>16</td><td>11308</td><td>Мария Чулова</td><td>62</td><td>67</td><td>0</td><td>66</td><td>62</td><td>75</td><td>49</td><td>69</td><td>48</td><td>50</td><td>0</td><td>70</td><td>67</td><td>61</td><td>69</td><td>63</td><td>0</td><td>0</td><td>0</td><td>0</td><td>878</td></tr>
+<tr><td>17</td><td>11801</td><td>Светослав Чимев</td><td>0</td><td>71</td><td>81</td><td>0</td><td>81</td><td>50</td><td>71</td><td>47</td><td>100</td><td>66</td><td>81</td><td>79</td><td>0</td><td>81</td><td>0</td><td>67</td><td>0</td><td>0</td><td>0</td><td>0</td><td>875</td></tr>
+<tr><td>18</td><td>12201</td><td>Христомир Раков</td><td>78</td><td>0</td><td>76</td><td>0</td><td>0</td><td>65</td><td>83</td><td>64</td><td>68</td><td>0</td><td>75</td><td>80</td><td>80</td><td>0</td><td>79</td><td>83</td><td>0</td><td>0</td><td>0</td><td>0</td><td>831</td></tr>
+<tr><td>19</td><td>10506</td><td>Деница Динева</td><td>68</td><td>70</td><td>57</td><td>58</td><td>59</td><td>64</td><td>56</td><td>63</td><td>47</td><td>43</td><td>61</td><td>68</td><td>0</td><td>78</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>792</td></tr>
+<tr><td>20</td><td>10601</td><td>Ели</td><td>73</td><td>58</td><td>66</td><td>0</td><td>66</td><td>58</td><td>65</td><td>0</td><td>0</td><td>0</td><td>77</td><td>69</td><td>60</td><td>70</td><td>0</td><td>70</td><td>0</td><td>0</td><td>0</td><td>0</td><td>732</td></tr>
+<tr><td>21</td><td>11802</td><td>Севдалина Тодорова</td><td>0</td><td>0</td><td>0</td><td>61</td><td>64</td><td>53</td><td>54</td><td>66</td><td>0</td><td>46</td><td>67</td><td>65</td><td>56</td><td>57</td><td>59</td><td>57</td><td>0</td><td>0</td><td>0</td><td>0</td><td>705</td></tr>
+<tr><td>22</td><td>11104</td><td>Кирил Младенов</td><td>61</td><td>64</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>67</td><td>53</td><td>57</td><td>66</td><td>74</td><td>100</td><td>59</td><td>74</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>675</td></tr>
+<tr><td>23</td><td>10516</td><td>Динко Давидов</td><td>0</td><td>81</td><td>100</td><td>0</td><td>82</td><td>82</td><td>0</td><td>71</td><td>76</td><td>85</td><td>0</td><td>0</td><td>0</td><td>83</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>660</td></tr>
+<tr><td>24</td><td>10308</td><td>Вихрен</td><td>76</td><td>0</td><td>0</td><td>74</td><td>0</td><td>78</td><td>77</td><td>79</td><td>90</td><td>76</td><td>90</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>640</td></tr>
+<tr><td>25</td><td>10402</td><td>Галя Лалева</td><td>0</td><td>60</td><td>69</td><td>62</td><td>69</td><td>76</td><td>46</td><td>0</td><td>0</td><td>61</td><td>0</td><td>0</td><td>51</td><td>0</td><td>68</td><td>60</td><td>0</td><td>0</td><td>0</td><td>0</td><td>622</td></tr>
+<tr><td>26</td><td>10407</td><td>Григор Григоров</td><td>0</td><td>77</td><td>82</td><td>70</td><td>63</td><td>0</td><td>0</td><td>77</td><td>0</td><td>0</td><td>85</td><td>0</td><td>66</td><td>0</td><td>0</td><td>82</td><td>0</td><td>0</td><td>0</td><td>0</td><td>602</td></tr>
+<tr><td>27</td><td>10403</td><td>Гено Петров</td><td>0</td><td>65</td><td>63</td><td>0</td><td>0</td><td>71</td><td>69</td><td>53</td><td>72</td><td>62</td><td>83</td><td>0</td><td>63</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>601</td></tr>
+<tr><td>28</td><td>10401</td><td>Галин</td><td>71</td><td>82</td><td>0</td><td>0</td><td>68</td><td>0</td><td>75</td><td>76</td><td>81</td><td>59</td><td>0</td><td>0</td><td>82</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>594</td></tr>
+<tr><td>29</td><td>10901</td><td>Иван Иванов</td><td>57</td><td>0</td><td>85</td><td>57</td><td>0</td><td>69</td><td>55</td><td>0</td><td>70</td><td>64</td><td>72</td><td>0</td><td>0</td><td>65</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>594</td></tr>
+<tr><td>30</td><td>10515</td><td>Димитър Шопов</td><td>0</td><td>0</td><td>59</td><td>0</td><td>56</td><td>49</td><td>47</td><td>44</td><td>0</td><td>0</td><td>65</td><td>64</td><td>68</td><td>0</td><td>65</td><td>61</td><td>0</td><td>0</td><td>0</td><td>0</td><td>578</td></tr>
+<tr><td>31</td><td>11805</td><td>Станимир Генев</td><td>0</td><td>0</td><td>67</td><td>68</td><td>70</td><td>60</td><td>51</td><td>52</td><td>52</td><td>0</td><td>0</td><td>0</td><td>48</td><td>0</td><td>0</td><td>78</td><td>0</td><td>0</td><td>0</td><td>0</td><td>546</td></tr>
+<tr><td>32</td><td>10102</td><td>Акси</td><td>0</td><td>0</td><td>0</td><td>53</td><td>54</td><td>48</td><td>41</td><td>49</td><td>46</td><td>40</td><td>0</td><td>0</td><td>54</td><td>56</td><td>51</td><td>53</td><td>0</td><td>0</td><td>0</td><td>0</td><td>545</td></tr>
+<tr><td>33</td><td>10405</td><td>Георги Симеонов</td><td>0</td><td>0</td><td>0</td><td>78</td><td>0</td><td>0</td><td>0</td><td>78</td><td>69</td><td>0</td><td>60</td><td>85</td><td>70</td><td>0</td><td>95</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>535</td></tr>
+<tr><td>34</td><td>10309</td><td>Владимир Бекяров</td><td>80</td><td>90</td><td>0</td><td>71</td><td>0</td><td>0</td><td>68</td><td>65</td><td>78</td><td>82</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>534</td></tr>
+<tr><td>35</td><td>11305</td><td>Марин Николов</td><td>66</td><td>0</td><td>74</td><td>0</td><td>0</td><td>72</td><td>0</td><td>74</td><td>79</td><td>0</td><td>0</td><td>0</td><td>69</td><td>0</td><td>0</td><td>79</td><td>0</td><td>0</td><td>0</td><td>0</td><td>513</td></tr>
+<tr><td>36</td><td>10105</td><td>Атанас Атанасов</td><td>83</td><td>0</td><td>0</td><td>0</td><td>0</td><td>84</td><td>84</td><td>0</td><td>67</td><td>84</td><td>0</td><td>90</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>492</td></tr>
+<tr><td>37</td><td>10101</td><td>Абаджиев</td><td>59</td><td>0</td><td>0</td><td>0</td><td>60</td><td>59</td><td>67</td><td>70</td><td>0</td><td>48</td><td>0</td><td>0</td><td>61</td><td>0</td><td>0</td><td>66</td><td>0</td><td>0</td><td>0</td><td>0</td><td>490</td></tr>
+<tr><td>38</td><td>11807</td><td>Стефан Иванов</td><td>0</td><td>0</td><td>80</td><td>83</td><td>72</td><td>0</td><td>60</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>85</td><td>0</td><td>83</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>463</td></tr>
+<tr><td>39</td><td>11603</td><td>Павлина Джамбазова </td><td>0</td><td>0</td><td>0</td><td>63</td><td>0</td><td>51</td><td>62</td><td>60</td><td>59</td><td>49</td><td>0</td><td>0</td><td>46</td><td>0</td><td>60</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>450</td></tr>
+<tr><td>40</td><td>10303</td><td>Веселин Младенов</td><td>0</td><td>0</td><td>0</td><td>73</td><td>67</td><td>54</td><td>63</td><td>68</td><td>0</td><td>60</td><td>0</td><td>0</td><td>0</td><td>0</td><td>64</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>449</td></tr>
+<tr><td>41</td><td>11303</td><td>Маргарита Дж</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>42</td><td>0</td><td>0</td><td>70</td><td>59</td><td>83</td><td>49</td><td>0</td><td>67</td><td>71</td><td>0</td><td>0</td><td>0</td><td>0</td><td>441</td></tr>
+<tr><td>42</td><td>12901</td><td>Юлиян Иванов</td><td>58</td><td>0</td><td>0</td><td>0</td><td>55</td><td>70</td><td>48</td><td>59</td><td>80</td><td>55</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>425</td></tr>
+<tr><td>43</td><td>11102</td><td>Кирил Бейдов</td><td>0</td><td>69</td><td>0</td><td>0</td><td>65</td><td>63</td><td>0</td><td>0</td><td>85</td><td>0</td><td>0</td><td>0</td><td>72</td><td>68</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>422</td></tr>
+<tr><td>44</td><td>10902</td><td>Иван Клисаров</td><td>0</td><td>59</td><td>0</td><td>0</td><td>0</td><td>0</td><td>72</td><td>0</td><td>62</td><td>0</td><td>69</td><td>0</td><td>0</td><td>76</td><td>0</td><td>81</td><td>0</td><td>0</td><td>0</td><td>0</td><td>419</td></tr>
+<tr><td>45</td><td>11107</td><td>Краси ???</td><td>0</td><td>0</td><td>64</td><td>0</td><td>0</td><td>56</td><td>50</td><td>62</td><td>75</td><td>56</td><td>56</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>419</td></tr>
+<tr><td>46</td><td>11604</td><td>Петър Генчев</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>51</td><td>57</td><td>71</td><td>45</td><td>58</td><td>53</td><td>58</td><td>0</td><td>0</td><td>0</td><td>0</td><td>393</td></tr>
+<tr><td>47</td><td>10511</td><td>Джон Марк</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>66</td><td>74</td><td>54</td><td>0</td><td>58</td><td>0</td><td>0</td><td>81</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>333</td></tr>
+<tr><td>48</td><td>13001</td><td>Ясен</td><td>70</td><td>0</td><td>68</td><td>0</td><td>0</td><td>0</td><td>58</td><td>72</td><td>63</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>331</td></tr>
+<tr><td>49</td><td>11803</td><td>Спас Пейчев</td><td>67</td><td>0</td><td>0</td><td>0</td><td>0</td><td>95</td><td>0</td><td>0</td><td>65</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>84</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>311</td></tr>
+<tr><td>50</td><td>10910</td><td>Илия Арсенов</td><td>56</td><td>50</td><td>0</td><td>0</td><td>0</td><td>47</td><td>0</td><td>45</td><td>56</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>56</td><td>0</td><td>0</td><td>0</td><td>0</td><td>310</td></tr>
+<tr><td>51</td><td>10512</td><td>Диана ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>52</td><td>0</td><td>0</td><td>46</td><td>0</td><td>42</td><td>0</td><td>72</td><td>43</td><td>0</td><td>52</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>307</td></tr>
+<tr><td>52</td><td>11401</td><td>Наско Станимиров</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>66</td><td>45</td><td>0</td><td>0</td><td>0</td><td>71</td><td>57</td><td>68</td><td>0</td><td>0</td><td>0</td><td>0</td><td>307</td></tr>
+<tr><td>53</td><td>11601</td><td>Павел Алексиев</td><td>55</td><td>0</td><td>58</td><td>55</td><td>0</td><td>45</td><td>0</td><td>0</td><td>0</td><td>44</td><td>0</td><td>0</td><td>47</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>304</td></tr>
+<tr><td>54</td><td>10508</td><td>Десо Тенев</td><td>65</td><td>0</td><td>72</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>84</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>81</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>302</td></tr>
+<tr><td>55</td><td>11602</td><td>Павел Йорданов</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>70</td><td>0</td><td>0</td><td>79</td><td>0</td><td>0</td><td>73</td><td>77</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>299</td></tr>
+<tr><td>56</td><td>11902</td><td>Тихомир Семов </td><td>0</td><td>0</td><td>73</td><td>0</td><td>0</td><td>67</td><td>57</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>44</td><td>0</td><td>54</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>295</td></tr>
+<tr><td>57</td><td>10304</td><td>Виктор Баталски</td><td>0</td><td>0</td><td>70</td><td>59</td><td>0</td><td>0</td><td>0</td><td>0</td><td>54</td><td>39</td><td>58</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>280</td></tr>
+<tr><td>58</td><td>10103</td><td>Анка Ганчева</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>76</td><td>58</td><td>0</td><td>63</td><td>76</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>273</td></tr>
+<tr><td>59</td><td>11103</td><td>Кирил Веселинов</td><td>63</td><td>61</td><td>65</td><td>60</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>249</td></tr>
+<tr><td>60</td><td>11608</td><td>Пламен6000 ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>55</td><td>0</td><td>0</td><td>0</td><td>54</td><td>0</td><td>0</td><td>0</td><td>67</td><td>73</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>249</td></tr>
+<tr><td>61</td><td>11109</td><td>Краси Христозов</td><td>0</td><td>80</td><td>77</td><td>90</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>247</td></tr>
+<tr><td>62</td><td>11002</td><td>Йордан Пенчев</td><td>0</td><td>0</td><td>60</td><td>0</td><td>57</td><td>52</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>57</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>226</td></tr>
+<tr><td>63</td><td>10505</td><td>Денис Олегов</td><td>0</td><td>0</td><td>71</td><td>75</td><td>74</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>220</td></tr>
+<tr><td>64</td><td>11307</td><td>Мария ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>46</td><td>0</td><td>50</td><td>0</td><td>0</td><td>70</td><td>0</td><td>0</td><td>0</td><td>0</td><td>54</td><td>0</td><td>0</td><td>0</td><td>0</td><td>220</td></tr>
+<tr><td>65</td><td>11701</td><td>Радослав Чакъров</td><td>0</td><td>72</td><td>0</td><td>82</td><td>0</td><td>0</td><td>66</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>220</td></tr>
+<tr><td>66</td><td>11110</td><td>Красимир Александров</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>69</td><td>0</td><td>63</td><td>71</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>203</td></tr>
+<tr><td>67</td><td>10501</td><td>Дани Георгиев</td><td>0</td><td>0</td><td>0</td><td>0</td><td>61</td><td>0</td><td>0</td><td>57</td><td>0</td><td>0</td><td>0</td><td>66</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>184</td></tr>
+<tr><td>68</td><td>12202</td><td>Христо Атанасов</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>51</td><td>61</td><td>67</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>179</td></tr>
+<tr><td>69</td><td>10502</td><td>Даниел Иванов</td><td>0</td><td>63</td><td>0</td><td>54</td><td>58</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>175</td></tr>
+<tr><td>70</td><td>11106</td><td>Коло ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>52</td><td>60</td><td>63</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>175</td></tr>
+<tr><td>71</td><td>10701</td><td>Жанет</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>56</td><td>0</td><td>0</td><td>0</td><td>0</td><td>50</td><td>66</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>172</td></tr>
+<tr><td>72</td><td>11901</td><td>Татяна Пенева</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>95</td><td>73</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>168</td></tr>
+<tr><td>73</td><td>11606</td><td>Петър Цурев</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>43</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>62</td><td>0</td><td>0</td><td>59</td><td>0</td><td>0</td><td>0</td><td>0</td><td>164</td></tr>
+<tr><td>74</td><td>11808</td><td>Стоил</td><td>72</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>83</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>155</td></tr>
+<tr><td>75</td><td>12301</td><td>Цветелин Цонков</td><td>0</td><td>0</td><td>55</td><td>56</td><td>0</td><td>0</td><td>44</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>155</td></tr>
+<tr><td>76</td><td>10517</td><td>Добромир Добромиров</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>71</td><td>74</td><td>0</td><td>0</td><td>0</td><td>0</td><td>145</td></tr>
+<tr><td>77</td><td>10001</td><td>333 ???</td><td>0</td><td>68</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>70</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>138</td></tr>
+<tr><td>78</td><td>10305</td><td>Виктор Видинов</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>64</td><td>58</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>122</td></tr>
+<tr><td>79</td><td>10302</td><td>Ваня</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>56</td><td>64</td><td>0</td><td>0</td><td>0</td><td>0</td><td>120</td></tr>
+<tr><td>80</td><td>10909</td><td>Иво Дуков </td><td>0</td><td>0</td><td>0</td><td>64</td><td>55</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>119</td></tr>
+<tr><td>81</td><td>11804</td><td>Станимир Баев</td><td>60</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>113</td></tr>
+<tr><td>82</td><td>10513</td><td>Диана Блажева</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>60</td><td>47</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>107</td></tr>
+<tr><td>83</td><td>10106</td><td>Атанас Желязков</td><td>54</td><td>49</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>103</td></tr>
+<tr><td>84</td><td>11101</td><td>Катерина  Бейчева</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>45</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>55</td><td>0</td><td>0</td><td>0</td><td>0</td><td>100</td></tr>
+<tr><td>85</td><td>11301</td><td>МаКолева</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>43</td><td>0</td><td>52</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>95</td></tr>
+<tr><td>86</td><td>10903</td><td>Иван М ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>90</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>90</td></tr>
+<tr><td>87</td><td>10801</td><td>Здравко Гюров</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>82</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>82</td></tr>
+<tr><td>88</td><td>10201</td><td>Бисер Стан</td><td>0</td><td>0</td><td>0</td><td>0</td><td>79</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>79</td></tr>
+<tr><td>89</td><td>10905</td><td>Иван Пеев</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>75</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>75</td></tr>
+<tr><td>90</td><td>11806</td><td>Стела</td><td>75</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>75</td></tr>
+<tr><td>91</td><td>10504</td><td>Данчо ???</td><td>0</td><td>74</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>74</td></tr>
+<tr><td>92</td><td>10507</td><td>Деси ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>74</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>74</td></tr>
+<tr><td>93</td><td>11310</td><td>Меги</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>72</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>72</td></tr>
+<tr><td>94</td><td>11001</td><td>Йордан Григоров</td><td>0</td><td>0</td><td>0</td><td>65</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>65</td></tr>
+<tr><td>95</td><td>11306</td><td>Мариос</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>62</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>62</td></tr>
+<tr><td>96</td><td>10908</td><td>Иво ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>58</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>58</td></tr>
+<tr><td>97</td><td>11201</td><td>Людмил</td><td>0</td><td>57</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>57</td></tr>
+<tr><td>98</td><td>10301</td><td>Валентина Псалтирова</td><td>0</td><td>0</td><td>56</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>56</td></tr>
+<tr><td>99</td><td>10306</td><td>Виктория </td><td>0</td><td>56</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>56</td></tr>
+<tr><td>100</td><td>11108</td><td>Краси Велчев</td><td>0</td><td>0</td><td>54</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>54</td></tr>
+<tr><td>101</td><td>11304</td><td>Мариела</td><td>0</td><td>54</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>54</td></tr>
+<tr><td>102</td><td>11105</td><td>Клеми ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td></tr>
+<tr><td>103</td><td>11311</td><td>Микену ???</td><td>0</td><td>0</td><td>53</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td></tr>
+<tr><td>104</td><td>12101</td><td>Философ ???</td><td>0</td><td>53</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td></tr>
+<tr><td>105</td><td>12201</td><td>Христо ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>53</td></tr>
+<tr><td>106</td><td>11312</td><td>Мирела</td><td>0</td><td>51</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>51</td></tr>
+<tr><td>107</td><td>11605</td><td>Петър Радев</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>49</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>49</td></tr>
+<tr><td>108</td><td>11302</td><td>Максим</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>48</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>48</td></tr>
+<tr><td>109</td><td>10406</td><td>Гергана</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>42</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>42</td></tr>
+<tr><td>110</td><td>10503</td><td>Даниела Кънева</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>41</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>41</td></tr>
+<tr><td>111</td><td>10911</td><td>Ицо ???</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>41</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>41</td></tr>
+</tbody>
+</table>
+</div>
 
 <script>
-/* ------- Utilities ------- */
-function parseCSV(text){
-  // Поддържа TSV или CSV; откриваме delimiter по първи ред
-  const lines = text.replace(/\\r/g,'').split('\\n').filter(l=>l.trim()!=='');
-  if(lines.length===0) return {headers:[], rows:[]};
-  const delim = (lines[0].indexOf('\\t')>-1) ? '\\t' : ',';
-  const headers = lines[0].split(delim).map(h=>h.trim());
-  const rows = lines.slice(1).map(line=>{
-    const cols = line.split(delim);
-    // pad to headers length
-    while(cols.length < headers.length) cols.push('');
-    return cols.map(c=>c.trim());
-  });
-  return {headers, rows};
+const table = document.getElementById('ranking');
+const tbody = table.querySelector('tbody');
+const headers = table.querySelectorAll('th');
+
+// дефиниции
+const COL_NAME = 2;
+const GAME_START = 3;
+const GAME_END = 22;
+const COL_TOP15 = 23;
+
+// числово?
+function isNum(x){ return !isNaN(parseFloat(x)); }
+
+function getVal(row, idx){
+    let t = row.children[idx].innerText.trim();
+    return isNum(t) ? Number(t) : t.toLowerCase();
 }
 
-function isNumeric(n){ return n!=='' && !isNaN(parseFloat(n)); }
-function toNumber(n){ return isNumeric(n) ? parseFloat(n) : NaN; }
+/* --- АВТОМАТИЧНО ИЗЧИСЛЯВАНЕ НА НАЙ-ДОБРИ 15 --- */
+function calcTop15(){
+    const rows = tbody.querySelectorAll("tr");
 
-/* ------- Main rendering and logic ------- */
-let current = {headers:[], rows:[]}; // rows: array of arrays
-let filters = {}; // headerIndex -> selectedValue or '' (all)
-let sortState = {col:-1, dir:'desc'}; // dir: 'desc' or 'asc'
+    rows.forEach(row=>{
+        let scores = [];
 
-function renderTable(){
-  const wrap = document.getElementById('tableWrap');
-  wrap.innerHTML = '';
-  if(current.headers.length===0){ wrap.innerHTML='<p>Няма заредена таблица.</p>'; return; }
+        for(let i = GAME_START; i <= GAME_END; i++){
+            let v = getVal(row, i);
+            if(isNum(v) && v > 0) scores.push(v);
+        }
 
-  // We'll assume last column to display is computed TopN; but game columns are all columns (we'll compute from all numeric columns)
-  const table = document.createElement('table');
-  const thead = document.createElement('thead');
-  const hdrRow = document.createElement('tr');
+        scores.sort((a,b)=>b-a);         // низходящо
+        let best15 = scores.slice(0, 15).reduce((a,b)=>a+b, 0);
 
-  // Create header cells: for each current header create title + filter select + sort button
-  current.headers.forEach((h, idx)=>{
-    const th = document.createElement('th');
-
-    const titleDiv = document.createElement('div');
-    titleDiv.className = 'col-title';
-    titleDiv.textContent = h || `Col ${idx+1}`;
-    titleDiv.style.cursor = 'pointer';
-    titleDiv.title = 'Клик за сортиране (превключва desc/asc)';
-
-    titleDiv.addEventListener('click', ()=> {
-      // toggle sort
-      if(sortState.col === idx) sortState.dir = (sortState.dir === 'desc') ? 'asc' : 'desc';
-      else { sortState.col = idx; sortState.dir = 'desc'; }
-      renderTable(); // re-render
+        row.children[COL_TOP15].innerText = best15;
     });
-
-    const controls = document.createElement('div');
-    controls.className = 'col-controls';
-
-    // Filter select (unique values)
-    const select = document.createElement('select');
-    select.className = 'filter-select';
-    const unique = Array.from(new Set(current.rows.map(r=> (r[idx]===undefined? '': r[idx]) )));
-    unique.sort((a,b)=> (''+a).localeCompare(''+b));
-    const allOpt = document.createElement('option'); allOpt.value=''; allOpt.textContent='(всички)'; select.appendChild(allOpt);
-    unique.forEach(v=>{
-      const opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt);
-    });
-    select.value = filters[idx] || '';
-    select.addEventListener('change', ()=> {
-      filters[idx] = select.value;
-      applyFiltersAndRender();
-    });
-
-    // Sort indicator
-    const sortBtn = document.createElement('button');
-    sortBtn.textContent = (sortState.col===idx) ? (sortState.dir==='desc' ? '↓' : '↑') : '⇅';
-    sortBtn.title = 'Сортирай (клик също хедър)';
-
-    sortBtn.addEventListener('click', ()=>{
-      if(sortState.col === idx) sortState.dir = (sortState.dir === 'desc') ? 'asc' : 'desc';
-      else { sortState.col = idx; sortState.dir = 'desc'; }
-      renderTable();
-    });
-
-    th.appendChild(titleDiv);
-    controls.appendChild(select);
-    controls.appendChild(sortBtn);
-    th.appendChild(controls);
-    hdrRow.appendChild(th);
-  });
-
-  // Add last header for TopN sum
-  const thSum = document.createElement('th');
-  thSum.innerHTML = '<div class="col-title">Top N SUM</div><div class="col-controls small"> (най-добри N от игрите)</div>';
-  hdrRow.appendChild(thSum);
-
-  thead.appendChild(hdrRow);
-  table.appendChild(thead);
-
-  // Prepare rows to display considering filters and sorting
-  let displayRows = current.rows.map((r, i)=>({r, idx:i}));
-
-  // Apply filters
-  Object.keys(filters).forEach(k=>{
-    const col = parseInt(k);
-    const val = filters[k];
-    if(val && val !== ''){
-      displayRows = displayRows.filter(obj => (obj.r[col] || '') === val);
-    }
-  });
-
-  // Sorting
-  if(sortState.col >= 0){
-    const c = sortState.col;
-    displayRows.sort((a,b)=>{
-      const va = a.r[c], vb = b.r[c];
-      const na = toNumber(va), nb = toNumber(vb);
-      if(isNumeric(va) && isNumeric(vb)){
-        return (sortState.dir==='desc') ? nb - na : na - nb;
-      } else {
-        // string compare
-        return (sortState.dir==='desc') ? (''+vb).localeCompare(''+va) : (''+va).localeCompare(''+vb);
-      }
-    });
-  }
-
-  // Create tbody
-  const tbody = document.createElement('tbody');
-
-  // Determine which columns are numeric game columns for TopN calculation:
-  // We'll treat all columns as potential game columns except the computed last column.
-  const topN = Math.max(1, Math.min(20, parseInt(document.getElementById('topN').value || '15')));
-
-  displayRows.forEach(obj=>{
-    const tr = document.createElement('tr');
-    const row = obj.r;
-    current.headers.forEach((h, idx)=>{
-      const td = document.createElement('td');
-      td.contentEditable = true; // allow quick edit
-      td.textContent = row[idx] || '';
-      // when editing, update current rows and recompute
-      td.addEventListener('input', ()=> {
-        current.rows[obj.idx][idx] = td.textContent.trim();
-        applyFiltersAndRender();
-      });
-      tr.appendChild(td);
-    });
-
-    // compute topN sum for this row
-    const nums = current.headers.map((_,i)=> toNumber(row[i])).filter(n=>!isNaN(n));
-    nums.sort((a,b)=>b-a);
-    const topSlice = nums.slice(0, topN);
-    const sum = topSlice.reduce((s,x)=>s+x,0);
-    const tdSum = document.createElement('td');
-    tdSum.textContent = Number.isFinite(sum) ? sum.toFixed(2).replace(/\\.00$/,'') : '';
-    tdSum.style.fontWeight = '600';
-    tr.appendChild(tdSum);
-
-    tbody.appendChild(tr);
-  });
-
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-
-  // status
-  const st = document.getElementById('status');
-  st.textContent = `Показани редове: ${displayRows.length}. Top N = ${topN}. (Редове: ${current.rows.length})`;
 }
 
-function applyFiltersAndRender(){
-  renderTable();
-}
-
-/* ------- Event bindings ------- */
-document.getElementById('parseBtn').addEventListener('click', ()=>{
-  const txt = document.getElementById('csvInput').value;
-  if(!txt.trim()){ alert('Постави CSV/TSV съдържание в полето.'); return; }
-  const parsed = parseCSV(txt);
-  current.headers = parsed.headers;
-  current.rows = parsed.rows;
-  filters = {};
-  sortState = {col:-1, dir:'desc'};
-  renderTable();
+/* --- ДОБАВЯМЕ СОРТИРАЩИ КЛАСОВЕ --- */
+headers.forEach((th, i)=>{
+    if(i === COL_NAME) th.classList.add("sortable", "sort-asc"); // име → A-Я
+    if(i >= GAME_START && i <= GAME_END) th.classList.add("sortable", "sort-desc"); // игри → низходящо
+    if(i === COL_TOP15) th.classList.add("sortable", "sort-desc"); // топ15 → низходящо
 });
 
-document.getElementById('applyTopN').addEventListener('click', ()=> applyFiltersAndRender());
-document.getElementById('clearFilters').addEventListener('click', ()=>{
-  filters = {};
-  renderTable();
+/* --- СОРТИРАНЕ --- */
+headers.forEach((th, idx)=>{
+    if(!th.classList.contains("sortable")) return;
+
+    th.addEventListener("click", ()=>{
+
+        let direction = "desc";
+        if(idx === COL_NAME) direction = "asc";
+
+        let rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a,b)=>{
+            let A = getVal(a, idx);
+            let B = getVal(b, idx);
+
+            if(typeof A === "number" && typeof B === "number")
+                return direction === "asc" ? A - B : B - A;
+
+            if(A < B) return direction === "asc" ? -1 : 1;
+            if(A > B) return direction === "asc" ? 1 : -1;
+            return 0;
+        });
+
+        rows.forEach(r=>tbody.appendChild(r));
+    });
 });
 
-document.getElementById('load-sample').addEventListener('click', ()=>{
-  // sample: first column is player names, then 16 game scores (we show 8 for brevity)
-  const sampleHeaders = ['Player','G1','G2','G3','G4','G5','G6','G7','G8','G9','G10'];
-  const sampleRows = [
-    ['Иван','10','9','8','6','7','0','10','9','8','5'],
-    ['Мария','9','10','7','8','10','9','9','8','7','10'],
-    ['Георги','8','','10','9','9','8','7','6','10','9'],
-    ['Петя','7','6','5','10','8','10','10','9','8','7'],
-  ];
-  const lines = [sampleHeaders.join(',')].concat(sampleRows.map(r=>r.join(','))).join('\\n');
-  document.getElementById('csvInput').value = lines;
-});
+/* --- ПЪРВО ИЗЧИСЛЯВАМЕ --- */
+calcTop15();
+</script>
+</body>
+</html>
 
