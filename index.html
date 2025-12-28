@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+
+<meta charset="UTF-8" />
+<title>Българска Национална Куиз Асоциация</title>
+
+<!-- Google tag -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PK66NTHPN8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PK66NTHPN8');
+</script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #001a33;
+    color: white;
+    text-align: center;
+}
+
+/* ===== HEADER ===== */
+header {
+    padding: 25px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    background-color: #00264d;
+    flex-wrap: wrap;
+}
+
+.logo {
+    height: 140px;
+    cursor: pointer;
+}
+
+.title {
+    font-size: 55px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.05;
+    text-align: left;
+
+    background: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #ffffff 25%,
+        #009e3d 25%,
+        #009e3d 75%,
+        #d80000 75%,
+        #d80000 100%
+    );
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-stroke: 3px #ffffff;
+}
+
+/* ===== NAVIGATION ===== */
+nav.main-nav {
+    background-color: #003366;
+    padding: 15px 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 2px solid #00509e;
+}
+
+nav.main-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 18px;
+    border-radius: 6px;
+    background-color: #003d7a;
+    border: 2px solid #00509e;
+    transition: 0.2s;
+}
+
+nav.main-nav a:hover {
+    background-color: #004a9f;
+    transform: scale(1.05);
+}
+
+/* ===== LOGO POPUP ===== */
+#logo-popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#logo-popup img {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+/* ===== PARTNERS ===== */
+.partners-wrapper {
+    width: 100%;
+    border-top: 2px solid #00509e;
+    margin-top: 40px;
+    padding: 20px 20px 40px;
+}
+
+.partners-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffcc00;
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 18px;
+    justify-items: center;
+}
+
+.partner-cell {
+    max-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.partner-box {
+    width: 100%;
+    height: 72px;
+    background: #ffffff;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+}
+
+.partner-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.partner-name {
+    margin-top: 8px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.partner-name a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.partner-name a:hover {
+    color: #ffd966;
+    text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1000px) {
+    .partners-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (max-width: 700px) {
+    header { flex-direction: column; }
+    .title { font-size: 34px; text-align: center; }
+    .logo { height: 110px; }
+    .partners-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 420px) {
+    .partners-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* ===== ЛИГА НА ИЗВЪНЗЕМНИТЕ ===== */
+.alien-league-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: left;
+}
+
+.alien-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* информационен блок (като новина) */
+.info-block {
+    background: #ffffff;
+    color: #000;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.info-block .date {
+    color: #00509e;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.info-block a {
+    color: #00509e;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.info-block a:hover {
+    text-decoration: underline;
+}
+
+/* класиране */
+.ranking-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff66cc; /* розово */
+    margin-bottom: 15px;
+}
+
+.ranking-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ranking-links a {
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.ranking-links a:hover {
+    color: #ffcc00; /* жълто при hover */
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="title">
+        БЪЛГАРСКА НАЦИОНАЛНА<br>
+        КУИЗ АСОЦИАЦИЯ
+    </div>
+    <img src="/partners/emblema.png" alt="Лого" class="logo">
+</header>
+
+<nav class="main-nav">
+    <a href="/index.html">Начало</a>
+    <a href="/kalendar/index.html">Събития</a>
+    <a href="#">Куиз играчи</a>
+    <a href="#">Отбори</a>
+    <a href="#">Нац. отбор</a>
+    <a href="/clasirane/index.html">Класирания</a>
+    <a href="/video/index.html">Мултимедия</a>
+    <a href="#">Отиди на куиз</a>
+    <a href="/igri/index.html">Игри на Знания</a>
+    <a href="#">Асоциация</a>
+</nav>
+
+<div id="logo-popup">
+    <img src="/partners/emblema.png" alt="Голямо лого">
+</div>
+
+<script>
+const logo = document.querySelector('.logo');
+const popup = document.getElementById('logo-popup');
+logo.onclick = () => popup.style.display = 'flex';
+popup.onclick = () => popup.style.display = 'none';
+</script>
+<!-- ===== ЛИГА НА ИЗВЪНЗЕМНИТЕ ===== -->
+<div class="alien-league-wrapper">
+
+    <div class="alien-title">Лига на извънземните</div>
+
+    <div class="info-block">
+        <div class="date"> Мало инфо/div>
+        <div>
+            👽 „Лига на извънземните“
+Финалът на проведените през месеца (тримесечието) светкавични игри сме го нарекли "Лига на Извънземните". .
+До него достигат 5 участника (заради евентуален тв формат), премнали успешно през 
+двата плейофа, в който пък участват 20-те най-добре представили се куиз-играчи от Светквичните игри
+За класиране за плейофите важат най-добрите 15 резултата от игрите за периода
+
+🎯 5-тимата финалисти ги очакват 40 трудни въпроса и титлата:
+„Шампион на месеца в Лигата на извънземните“.
+.
+
+⚡ „Универсални светкавични игри“
+🧠 30 въпроса (по 3 от 10 области на познанието).
+⏱️ Време за отговор: 20 секунди (за да няма търсене в нета).
+🏆 Точки за класиране:
+1-во място → 100 т.
+2-ро място → 95 т.
+3-то място → 90 т.
+4-то място → 85 т.
+5-то място и надолу → -1 т. (84, 83, 82...)
+След 88-мо → винаги 1 точка.
+        </div>
+        <br>
+        <a href="#">… прочети повече</a>
+    </div>
+
+    <div class="ranking-title">Класиране</div>
+
+    <div class="ranking-links">
+        <a href="#">Лига 1</a>
+        <a href="#">Лига 2</a>
+        <a href="#">Лига 3</a>
+    </div>
+
+</div>
+
+<!-- ===== ПАРТНЬОРИ – НАПЪЛНО ЗАПАЗЕНИ ===== -->
+<div class="partners-wrapper">
+    <div class="partners-title">Нашите партньори</div>
+
+    <div class="partners-grid">
+
+       <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/toto.png" alt="Български спортен тотализатор"></div>
+            <div class="partner-name"><a href="https://toto.bg" target="_blank" rel="noopener">Български спортен тотализатор</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/posledniat_pecheli.png" alt="Последният печели (ТВ игра)"></div>
+            <div class="partner-name"><a href="https://bnt.bg/news/posledniyat-pecheli-281378news.html" target="_blank" rel="noopener">Последният печели</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/stani_bogat.png" alt="Стани богат (ТВ игра)"></div>
+            <div class="partner-name"><a href="https://btvplus.bg/produkt/predavaniya/67912/stani-bogat/sezon-4" target="_blank" rel="noopener">Стани богат</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/minuta.png" alt="Минута е много (ТВ игра)"></div>
+            <div class="partner-name"><a href="http://www.minutaemnogo.tv/" target="_blank" rel="noopener">Минута е много</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/igri_na_znania.png" alt="Игри на Знания (група)"></div>
+            <div class="partner-name"><a href="https://www.facebook.com/groups/791002883500846/" target="_blank" rel="noopener">Игри на Знания</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/bg_kuiz_liga.png" alt="Българска куиз лига"></div>
+            <div class="partner-name"><a href="https://www.facebook.com/groups/170785244940606" target="_blank" rel="noopener">Българска куиз лига</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/zagadkite.png" alt="Загадките на Атанас Атанасов"></div>
+            <div class="partner-name"><a href="https://www.facebook.com/ZagadkiAA/?locale=bg_BG" target="_blank" rel="noopener">Загадките на Атанас Атанасов</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/posledniat1.png" alt="Последният печели (група 1)"></div>
+            <div class="partner-name"><a href="https://www.facebook.com/groups/959830148105568?locale=bg_BG" target="_blank" rel="noopener">Последният печели – група 1</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/posledniat2.png" alt="Последният печели (група 2)"></div>
+            <div class="partner-name"><a href="https://www.facebook.com/groups/325290716277553?locale=bg_BG" target="_blank" rel="noopener">Последният печели – група 2</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="/partners/geograf.png" alt="Географ БГ"></div>
+            <div class="partner-name"><a href="https://geograf.bg/bg" target="_blank" rel="noopener">Географ БГ</a></div>
+        </div>
+
+        <div class="partner-cell">
+            <div class="partner-box"><img src="partners/level_up.png" alt="Level Up"></div>
+            <div class="partner-name"><a href="https://www.facebook.com/LevelUpOpera/?locale=bg_BG" target="_blank" rel="noopener">Бар Level Up</a></div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>
